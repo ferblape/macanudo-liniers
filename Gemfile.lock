@@ -1,0 +1,28 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    addressable (2.2.6)
+    heroku (2.8.4)
+      launchy (>= 0.3.2)
+      rest-client (~> 1.6.1)
+      rubyzip
+      term-ansicolor (~> 1.0.5)
+    launchy (2.0.5)
+      addressable (~> 2.2.6)
+    libxml-ruby (2.2.2)
+    mime-types (1.16)
+    nokogiri (1.5.0)
+    ratom (0.6.9)
+      libxml-ruby (>= 1.1.2)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
+    rubyzip (0.9.4)
+    term-ansicolor (1.0.6)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  heroku
+  nokogiri
+  ratom
