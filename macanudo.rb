@@ -64,8 +64,3 @@ class Macanudo
   end
 
 end
-
-m = Macanudo.new
-if m.get_last_entry
-  m.update_last_entry
-end
