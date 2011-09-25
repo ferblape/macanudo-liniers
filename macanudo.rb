@@ -34,7 +34,7 @@ class Macanudo
 
   def initialize
     @last_entry = {
-      :type => 'photo', :state => 'draft', :format => 'html',
+      :type => 'photo', :state => 'published', :format => 'html',
       :tags => 'liniers,macanudo', :group => 'macanudo-liniers.tumblr.com'
     }
   end
@@ -47,13 +47,14 @@ class Macanudo
         image_src = html_doc.css("img[src*=bucket]").first['src']
         if !image_src.nil? && image_src != ""
           @last_entry.merge!({
-            :source => image_src, :caption => "Macanudo #{Date.today.strftime("%d / %m / %Y")} - <a href=\"http://www.lanacion.com.ar/humor\">Por Liniers</a>"
+            :source => image_src,
+            :caption => "Macanudo #{Date.today.strftime("%d / %m / %Y")} - <a href=\"http://www.lanacion.com.ar/humor\">Por Liniers</a>"
           })
           return true
         end
-        return false
       end
     end
+    return false
   end
 
   def update_last_entry
