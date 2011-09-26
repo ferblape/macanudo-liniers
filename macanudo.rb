@@ -50,6 +50,7 @@ class Macanudo
             :source => image_src,
             :caption => "Macanudo #{Date.today.strftime("%d / %m / %Y")} - <a href=\"http://www.lanacion.com.ar/humor\">Por Liniers</a>"
           })
+          puts "Image from today found"
           return true
         end
       end
@@ -59,8 +60,10 @@ class Macanudo
 
   def update_last_entry
     return if @last_entry[:source].nil?
+    puts "Publishing..."
     tumblr = Tumblr.new(ENV['tumblr_email'], ENV['tumblr_password'], 'macanudo-liniers')
-    tumblr.publish_photo(@last_entry)
+    response = tumblr.publish_photo(@last_entry)
+    puts response.inspect
   end
 
 end
