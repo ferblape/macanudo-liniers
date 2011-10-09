@@ -2,7 +2,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     addressable (2.2.6)
-    heroku (2.8.4)
+    heroku (2.8.6)
       launchy (>= 0.3.2)
       rest-client (~> 1.6.1)
       rubyzip
