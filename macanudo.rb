@@ -33,36 +33,39 @@ class Macanudo
   attr_reader :last_entry
 
   def initialize
-    @last_entry = {
+    @post = {
       :type => 'photo', :state => 'published', :format => 'html',
       :tags => 'liniers,macanudo', :group => 'macanudo-liniers.tumblr.com'
     }
   end
 
-  def get_last_entry
+  def get_post(time = :today)
+    time = time.to_sym
+    raise "time argument valid values are :today or :yesterday" if time != :today && time != :yesterday
+    date = time == :today ? Date.today : Date.today - 1
     feed = Atom::Feed.load_feed(URI.parse(FEED))
     feed.each_entry do |entry|
-      if entry.published.to_date == Date.today
+      if entry.published.to_date == date
         html_doc = Nokogiri::HTML(entry.content)
         image_src = html_doc.css("img[src*=bucket]").first['src']
         if !image_src.nil? && image_src != ""
-          @last_entry.merge!({
+          @post.merge!({
             :source => image_src,
-            :caption => "Macanudo #{Date.today.strftime("%d / %m / %Y")} - <a href=\"http://www.lanacion.com.ar/humor\">Por Liniers</a>"
+            :caption => "Macanudo #{date.strftime("%d / %m / %Y")} - <a href=\"http://www.lanacion.com.ar/humor\">Por Liniers</a>"
           })
-          puts "Image from today found"
-          return true
+          puts "Image from #{time} found"
+          return @post
         end
       end
     end
     return false
   end
 
-  def update_last_entry
-    return if @last_entry[:source].nil?
+  def update_with_post
+    return if @post[:source].nil?
     puts "Publishing..."
     tumblr = Tumblr.new(ENV['tumblr_email'], ENV['tumblr_password'], 'macanudo-liniers')
-    response = tumblr.publish_photo(@last_entry)
+    response = tumblr.publish_photo(@post)
     puts response.inspect
   end
 
