@@ -2,6 +2,7 @@
 
 require 'net/http'
 require 'uri'
+require 'open-uri'
 
 require 'rubygems'
 require 'bundler/setup'
@@ -28,9 +29,9 @@ end
 # macanudo-liniers.tumblr.com
 class Macanudo
 
-  FEED = "http://feeds.feedburner.com/Autoliniers"
+  SRC_URL = "http://www.lanacion.com.ar/humor/macanudo"
 
-  attr_reader :last_entry
+  attr_reader :post
 
   def initialize
     @post = {
@@ -39,25 +40,20 @@ class Macanudo
     }
   end
 
-  def get_post(time = :today)
-    time = time.to_sym
-    raise "time argument valid values are :today or :yesterday" if time != :today && time != :yesterday
-    date = time == :today ? Date.today : Date.today - 1
-    feed = Atom::Feed.load_feed(URI.parse(FEED))
-    feed.each_entry do |entry|
-      if entry.published.to_date == date
-        html_doc = Nokogiri::HTML(entry.content)
-        image_src = html_doc.css("img[src*=bucket]").first['src']
-        if !image_src.nil? && image_src != ""
-          @post.merge!({
-            :source => image_src,
-            :caption => "Macanudo #{date.strftime("%d / %m / %Y")} - <a href=\"http://www.lanacion.com.ar/humor\">Por Liniers</a>"
-          })
-          puts "Image from #{time} found"
-          return @post
-        end
-      end
+  def get_post
+    html_doc = Nokogiri::HTML(open(SRC_URL))
+    image_src = html_doc.css("a[alt='Liniers - Macanudo'] img").first['src'].gsub(/w318/,'')
+    if !image_src.nil? && image_src != ""
+      @post.merge!({
+        :source => image_src,
+        :caption => "Macanudo #{Date.today.strftime("%d / %m / %Y")} - <a href=\"http://www.lanacion.com.ar/humor\">Por Liniers</a>"
+      })
+      puts "Image from today found"
+      return @post
     end
+  rescue
+    puts "Exception raised when trying to get the image"
+    puts $!
     return false
   end
 
