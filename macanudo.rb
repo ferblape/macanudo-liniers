@@ -29,7 +29,7 @@ end
 # macanudo-liniers.tumblr.com
 class Macanudo
 
-  SRC_URL = "http://www.lanacion.com.ar/humor/macanudo"
+  SRC_URL = "http://www.lanacion.com.ar/humor"
 
   attr_reader :post
 
@@ -63,6 +63,7 @@ class Macanudo
     tumblr = Tumblr.new(ENV['tumblr_email'], ENV['tumblr_password'], 'macanudo-liniers')
     response = tumblr.publish_photo(@post)
     puts response.inspect
+    puts response.body
   end
 
 end
